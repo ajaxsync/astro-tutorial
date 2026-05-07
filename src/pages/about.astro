@@ -1,5 +1,8 @@
 ---
+// import Navigation from "../components/Navigation.astro";
 import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
 
 const pageTitle = "关于我";
 
@@ -47,9 +50,8 @@ const skillColor = "crimson";
     </style>
   </head>
   <body>
-    <a href="/">首页</a>
-    <a href="/about/">关于</a>
-    <a href="/blog/">博客</a>
+    <!-- <Navigation /> -->
+    <Header />
 
     <h1>{pageTitle}</h1>
     <p>以下是关于我的几个事实：</p>
@@ -74,5 +76,10 @@ const skillColor = "crimson";
     {finished && <p>我完成了这节教程！</p>}
 
     {goal === 3 ? <p>我的目标是在三天内完成。</p> : <p>我的目标不是 3 天。</p>}
+    <Footer />
+
+    <script>
+      import "../scripts/menu.js";
+    </script>
   </body>
 </html>
