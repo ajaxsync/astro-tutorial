@@ -1,8 +1,6 @@
 ---
-// import Navigation from "../components/Navigation.astro";
 import "../styles/global.css";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 const pageTitle = "关于我";
 
@@ -23,63 +21,44 @@ const identityColor = "green";
 const skillColor = "crimson";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{pageTitle}</title>
+<BaseLayout pageTitle={pageTitle}>
+  <p>以下是关于我的几个事实：</p>
+  <ul class="identity-list">
+    <li>我的名字是{identity.firstName}.</li>
+    <li>我住在{identity.country}。我的职业是{identity.occupation}。</li>
+    {
+      identity.hobbies.length >= 2 && (
+        <li>
+          我的两个习惯：{identity.hobbies[0]}和{identity.hobbies[1]}
+        </li>
+      )
+    }
+  </ul>
+  <p>我的技能是：</p>
+  <ul>
+    {skills.map((skill) => <li class="skill">{skill}</li>)}
+  </ul>
 
-    <style define:vars={{ skillColor, identityColor }}>
-      h1 {
-        color: purple;
-        font-size: 4rem;
-      }
+  {happy && <p>我非常乐意学习 Astro！</p>}
 
-      .identity-list li {
-        margin-bottom: 0.1rem;
-        color: var(--identityColor);
-      }
+  {finished && <p>我完成了这节教程！</p>}
 
-      .skill {
-        color: var(--skillColor);
-        font-weight: bold;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- <Navigation /> -->
-    <Header />
+  {goal === 3 ? <p>我的目标是在三天内完成。</p> : <p>我的目标不是 3 天。</p>}
+</BaseLayout>
 
-    <h1>{pageTitle}</h1>
-    <p>以下是关于我的几个事实：</p>
-    <ul class="identity-list">
-      <li>我的名字是{identity.firstName}.</li>
-      <li>我住在{identity.country}。我的职业是{identity.occupation}。</li>
-      {
-        identity.hobbies.length >= 2 && (
-          <li>
-            我的两个习惯：{identity.hobbies[0]}和{identity.hobbies[1]}
-          </li>
-        )
-      }
-    </ul>
-    <p>我的技能是：</p>
-    <ul>
-      {skills.map((skill) => <li class="skill">{skill}</li>)}
-    </ul>
+<style define:vars={{ skillColor, identityColor }}>
+  h1 {
+    color: purple;
+    font-size: 4rem;
+  }
 
-    {happy && <p>我非常乐意学习 Astro！</p>}
+  .identity-list li {
+    margin-bottom: 0.1rem;
+    color: var(--identityColor);
+  }
 
-    {finished && <p>我完成了这节教程！</p>}
-
-    {goal === 3 ? <p>我的目标是在三天内完成。</p> : <p>我的目标不是 3 天。</p>}
-    <Footer />
-
-    <script>
-      import "../scripts/menu.js";
-    </script>
-  </body>
-</html>
+  .skill {
+    color: var(--skillColor);
+    font-weight: bold;
+  }
+</style>

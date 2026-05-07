@@ -1,21 +1,8 @@
 ---
-import Layout from "../layouts/Layout.astro";
-// import Navigation from "../components/Navigation.astro";
-import Header from "../components/Header.astro";
-
-import "../styles/global.css";
-import Footer from "../components/Footer.astro";
-
+import BaseLayout from "../layouts/BaseLayout.astro";
 const pageTitle = "首页";
 ---
 
-<Layout>
-  <!-- <Navigation /> -->
-  <Header />
-  <h1>{pageTitle}</h1>
-  <Footer />
-
-  <script>
-    import "../scripts/menu.js";
-  </script>
-</Layout>
+<BaseLayout pageTitle={pageTitle}>
+  <h2>我超棒的博客副标题</h2>
+</BaseLayout>
