@@ -1,35 +1,77 @@
 ---
 import ChannelLayout from '../layouts/ChannelLayout.astro';
 import PostCard from '../components/PostCard.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
+import { channelConfig } from '../config/channel';
+import { formatDateLabel, getDateKey } from '../utils/date';
 
-const posts = await getCollection('posts', ({ data }: { data: any }) => {
+const posts = await getCollection('posts', ({ data }) => {
   return !data.draft;
 });
 
 posts.sort((a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) => {
-  return new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime();
+  return new Date(a.data.publishedAt).getTime() - new Date(b.data.publishedAt).getTime();
 });
 
-const pageTitle = '首页';
-const channelName = '科技前沿';
-const subscribers = 12500;
+const postsWithContent = await Promise.all(
+  posts.map(async (post) => {
+    const { Content } = await render(post);
+    return { post, Content };
+  })
+);
+
+const groupedPosts = postsWithContent.reduce(
+  (groups: Record<string, typeof postsWithContent>, { post, Content }) => {
+    const dateKey = getDateKey(post.data.publishedAt);
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].push({ post, Content });
+    return groups;
+  },
+  {}
+);
 ---
 
-<ChannelLayout pageTitle={pageTitle} channelName={channelName} subscribers={subscribers}>
-  <div class="space-y-4">
-    {posts.map((post: CollectionEntry<'posts'>) => (
-      <PostCard post={post} />
+<ChannelLayout
+  pageTitle="首页"
+  channelName={channelConfig.name}
+  channelUsername={channelConfig.username}
+  subscribers={channelConfig.subscribers}
+  description={channelConfig.description}
+  postsCount={posts.length}
+  githubUrl={channelConfig.githubUrl}
+>
+  <div id="messages-container">
+    {Object.entries(groupedPosts).map(([dateKey, dayPosts]) => (
+      <div>
+        <div class="flex justify-center py-3">
+          <span class="tg-date-divider">{formatDateLabel(dateKey)}</span>
+        </div>
+
+        {dayPosts.map(({ post, Content }) => (
+          <PostCard post={post} Content={Content} />
+        ))}
+      </div>
     ))}
+
+    {posts.length === 0 && (
+      <div class="text-center py-12">
+        <svg class="w-16 h-16 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--tg-text-secondary);">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+        </svg>
+        <p style="color: var(--tg-text-secondary);">暂无消息，敬请期待</p>
+      </div>
+    )}
   </div>
-  
-  {posts.length === 0 && (
-    <div class="text-center py-12">
-      <svg class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-      </svg>
-      <p class="text-gray-500 dark:text-gray-400">暂无消息，敬请期待</p>
-    </div>
-  )}
 </ChannelLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('main-scroll-container');
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  });
+</script>
