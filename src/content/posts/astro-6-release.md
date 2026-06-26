@@ -1,9 +1,7 @@
 ---
 title: "🚀 Astro 6.0 正式发布：性能提升 50%！"
-publishedAt: 2026-05-08T15:30:00
+publishedAt: 2026-06-26 14:30:26
 tags: ["Astro", "前端", "框架更新"]
-views: 5678
-comments: 128
 draft: false
 ---
 
@@ -21,10 +19,10 @@ Astro 团队今天正式发布了 Astro 6.0 版本，带来了多项重大改进
 
 ```javascript
 // 更简单的 Content Collections 配置
-import { defineCollection } from 'astro:content';
+import { defineCollection } from "astro:content";
 
 const posts = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     title: z.string(),
     publishedAt: z.date(),
@@ -38,7 +36,7 @@ const posts = defineCollection({
 
 ```javascript
 // astro.config.mjs
-import tailwind from '@tailwindcss/vite';
+import tailwind from "@tailwindcss/vite";
 
 export default defineConfig({
   vite: {
@@ -62,7 +60,7 @@ yarn add astro@latest
 
 ## 兼容性说明
 
-- ✅ Node.js 18.20+  required
+- ✅ Node.js 18.20+ required
 - ✅ 向后兼容 Astro 5.x 项目
 - ⚠️ 部分 API 有 breaking changes
 

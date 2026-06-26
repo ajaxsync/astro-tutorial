@@ -2,8 +2,6 @@
 title: "🎉 欢迎来到科技前沿频道！"
 publishedAt: 2026-05-09T10:00:00
 tags: ["公告", "欢迎"]
-views: 2333
-comments: 45
 draft: false
 ---
 
