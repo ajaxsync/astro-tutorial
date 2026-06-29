@@ -2,6 +2,7 @@
 import ChannelLayout from '../../layouts/ChannelLayout.astro';
 import PostCard from '../../components/PostCard.astro';
 import PostReadingTools from '../../components/PostReadingTools.astro';
+import AccessGate from '../../components/AccessGate.astro';
 import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { channelConfig } from '../../config/channel';
@@ -22,6 +23,9 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const { data } = post;
+const isProtected = data.draft || data.archived;
+const gateMode = data.draft ? 'drafts' : 'archive';
+const badge = data.draft ? 'draft' : data.archived ? 'archived' : undefined;
 ---
 
 <ChannelLayout
@@ -32,11 +36,23 @@ const { data } = post;
   description={channelConfig.description}
   githubUrl={channelConfig.githubUrl}
 >
-  <div data-post-article>
-    <PostCard post={post} Content={Content} />
-  </div>
-
-  <PostReadingTools />
+  {
+    isProtected ? (
+      <AccessGate mode={gateMode}>
+        <div data-post-article>
+          <PostCard post={post} Content={Content} badge={badge} />
+        </div>
+        <PostReadingTools />
+      </AccessGate>
+    ) : (
+      <>
+        <div data-post-article>
+          <PostCard post={post} Content={Content} />
+        </div>
+        <PostReadingTools />
+      </>
+    )
+  }
 </ChannelLayout>
 
 <script>

@@ -3,6 +3,7 @@ title: "💡 TypeScript 5.8 的 10 个实用技巧"
 publishedAt: 2026-05-07T09:15:00
 tags: ["TypeScript", "开发技巧", "教程"]
 draft: false
+archived: true
 ---
 
 TypeScript 5.8 带来了很多实用的新特性，这里分享 10 个我最喜欢的技巧！

@@ -1,6 +1,7 @@
 export const channelConfig = {
-  name: '科技前沿',
+  name: '噜噜哇',
   username: 'tech_frontier',
+  avatarUrl: '/favicon.jpg',
   description: '分享最新科技资讯和技术干货',
   subscribers: 12500,
   telegramUrl: 'https://t.me/tech_frontier',

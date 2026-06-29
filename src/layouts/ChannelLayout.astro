@@ -1,6 +1,9 @@
 ---
 import "../styles/global.css";
+import ChannelAvatar from "../components/ChannelAvatar.astro";
+import LuluCardModal from "../components/LuluCardModal.astro";
 import { formatCount } from "../config/channel";
+import { getArchivedPosts, getDraftPosts } from "../utils/posts";
 
 interface Props {
   pageTitle: string;
@@ -14,8 +17,8 @@ interface Props {
 
 const {
   pageTitle,
-  channelName = "科技前沿",
-  channelUsername = "tech_frontier",
+  channelName = "噜噜哇",
+  channelUsername = "luluwa",
   subscribers = 0,
   description = "分享最新科技资讯和技术干货",
   postsCount = 0,
@@ -24,6 +27,13 @@ const {
 
 const formattedSubscribers = formatCount(subscribers);
 const formattedPosts = formatCount(postsCount);
+
+const [archivedPosts, draftPosts] = await Promise.all([
+  getArchivedPosts(),
+  getDraftPosts(),
+]);
+const hasArchive = archivedPosts.length > 0;
+const hasDrafts = draftPosts.length > 0;
 ---
 
 <!doctype html>
@@ -32,7 +42,7 @@ const formattedPosts = formatCount(postsCount);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={pageTitle} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <title>{pageTitle} | {channelName}</title>
     <script is:inline>
       if (
@@ -58,20 +68,7 @@ const formattedPosts = formatCount(postsCount);
         <div class="channel-inner py-2.5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3 min-w-0">
-            <div
-              class="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
-              style="background: linear-gradient(135deg, #3390ec, #5b9bd5);"
-            >
-              <svg
-                class="w-5 h-5 text-white"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"
-                ></path>
-              </svg>
-            </div>
+            <ChannelAvatar variant="home" />
             <div class="min-w-0">
               <h1
                 class="text-base font-semibold truncate"
@@ -83,11 +80,46 @@ const formattedPosts = formatCount(postsCount);
                 class="text-xs truncate"
                 style="color: var(--tg-text-secondary);"
               >
-                {formattedSubscribers} 订阅者
+                <!-- {formattedSubscribers} 订阅者 -->
+                我吾想翻工啊
               </p>
             </div>
           </div>
           <div class="flex items-center gap-1 flex-shrink-0">
+            {hasArchive && (
+              <a
+                href="/archive/"
+                class="p-2 rounded-full transition-opacity hover:opacity-70"
+                aria-label="归档"
+                style="color: var(--tg-text-secondary);"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                  />
+                </svg>
+              </a>
+            )}
+            {hasDrafts && (
+              <a
+                href="/drafts/"
+                class="p-2 rounded-full transition-opacity hover:opacity-70"
+                aria-label="草稿"
+                style="color: var(--tg-text-secondary);"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </a>
+            )}
             <a
               href={githubUrl}
               target="_blank"
@@ -147,6 +179,8 @@ const formattedPosts = formatCount(postsCount);
         <slot />
       </div>
     </main>
+
+    <LuluCardModal />
 
     <script>
       document.getElementById("theme-toggle")?.addEventListener("click", () => {
